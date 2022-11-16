@@ -1,0 +1,39 @@
+Sub CATMain()
+	
+	' Don't show warning messages.
+	CATIA.DisplayFileAlerts = false
+	
+	' Get count of windows and documents.
+	AllWindows = CATIA.Windows.Count
+	AllDocs = CATIA.Documents.Count 
+
+	' Documents or Windows open?
+	If (AllWindows <> 0 Or AllDocs <> 0 ) then	
+		Exe = MsgBox("This CATScript will close..." & Chr(10) & Chr(10) & "All windows: " & AllWindows & "" & Chr(10) & "All files/documents: " & AllDocs & "" & Chr(10) & Chr(10) & "...in the session without saving anything." & Chr(10) & "Would you like to continue?", vbOKCancel + vbInformation, "Kill'em All")
+	else
+		MsgBox "No windows or documents open"
+		Exit Sub
+	end If
+
+	' Close all windows and all documents.
+	If Exe = vbOK Then
+		
+		' Close windows.
+		If AllWindows > 0 Then	
+			For Each CATIA_Window In CATIA.Windows 
+			CATIA_Window.Activate()
+			CATIA_Window.Close()
+			Next		
+		End If
+
+		' Close documents.
+		If AllDocs > 0 Then
+			For Each CATIA_Document In CATIA.Documents 
+			CATIA_Document.Close()
+			Next
+		End If
+		
+		' Inform User.
+		Msgbox 	AllWindows & " window(s) closed" & Chr(10) & AllDocs & " document(s) closed" 
+	End If
+End Sub
